@@ -10,32 +10,40 @@ const routes: Array<RouteRecordRaw> = [
     redirect: { name: "Demo" },
     children: [
       {
-        path: "demo",
+        path: "/demo",
         name: "Demo",
         component: Demo,
         meta: {
-          title: "主页"
+          title: "主页",
+          requireAuth: false
         }
       },
       {
-        path: "tools",
+        path: "/tools",
         name: "Tools",
         component: () => import("@/views/tools/index.vue"),
         meta: {
-          title: "工具"
+          title: "工具",
+          requireAuth: true
         }
       },
       {
-        path: "about",
+        path: "/about",
         name: "About",
         component: () => import("@/views/about/index.vue"),
         meta: {
           title: "关于",
-          noCache: true
+          noCache: true // 关闭缓存
         }
       }
     ]
-  }
+  },
+  {
+    path: "/login",
+    name: "Login",
+    meta: { title: "登录", requireAuth: false },
+    component: () => import("@/views/login/index.vue")
+  },
 ];
 
 export default routes;
