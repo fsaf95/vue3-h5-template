@@ -89,7 +89,7 @@ const progressValue = ref(10);
 .progress-con {
   position: relative;
   display: flex;
-  align-items: end;
+  align-items: flex-end; /* 修改这里 */
   padding-bottom: 13px;
   width: 100%;
   height: 100px;
