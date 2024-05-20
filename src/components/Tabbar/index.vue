@@ -18,24 +18,26 @@ const active = ref(0);
 const tabbarData = reactive([
   {
     icon: "wap-home-o",
-    title: "主页",
+    title: "数据",
     to: {
       name: "Demo"
     }
   },
   {
-    icon: "gem-o",
-    title: "工具",
+    icon: "manager-o",
+    title: "客户",
     to: {
-      name: "Tools"
+      name: "CustomerList"
     }
   },
-  {
-    icon: "user-o",
-    title: "关于",
-    to: {
-      name: "About"
-    }
-  }
 ]);
 </script>
+<style lang="less">
+.van-tabbar__placeholder {
+  --van-tabbar-height: 120px;
+  --van-tabbar-item-font-size: 26px;
+  --van-tabbar-item-icon-size: 52px;
+  --van-tabbar-item-text-color: #333333;
+  --van-tabbar-item-active-color: #e81414;
+}
+</style>

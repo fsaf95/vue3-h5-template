@@ -19,12 +19,12 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "/tools",
-        name: "Tools",
-        component: () => import("@/views/tools/index.vue"),
+        path: "/customerList",
+        name: "CustomerList",
+        component: () => import("@/views/customerList/index.vue"),
         meta: {
-          title: "工具",
-          requireAuth: true
+          title: "客户",
+          requireAuth: false
         }
       },
       {

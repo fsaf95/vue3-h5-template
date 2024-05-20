@@ -1,10 +1,13 @@
 <template>
   <div class="w-full h-auto bg-white mt-[20px]">
-    <div class="w-full flex items-center justify-between p-[26px] border-b-4 border-slate-300">
+    <div
+      class="w-full flex items-center justify-between p-[26px] border-b-4 border-slate-300"
+    >
       <div class="text-[24px]">活动类型：微信立减和折扣</div>
       <div class="dropdown-menu">
         <button @click="isDropdownVisible = !isDropdownVisible">
-          {{ selectedItem }} <van-icon :name="isDropdownVisible?'arrow-up':'arrow-down'" />
+          {{ selectedItem }}
+          <van-icon :name="isDropdownVisible ? 'arrow-up' : 'arrow-down'" />
         </button>
         <div v-if="isDropdownVisible" class="dropdown-content">
           <ul>
@@ -19,7 +22,9 @@
         </div>
       </div>
     </div>
-    <div class="w-full box-border overflow-hidden px-[26px] pt-[26px] pb-[40px]">
+    <div
+      class="w-full box-border overflow-hidden px-[26px] pt-[26px] pb-[40px]"
+    >
       <div class="consume-date-tabbed">
         <div
           class="consume-date-btn"
@@ -33,29 +38,25 @@
       </div>
       <div class="grid gap-y-[30px] gap-x-[50px] grid-cols-2 my-[40px]">
         <div class="flex items-start text-[26px]">
-          <div class="font-bold">
-            {{ consumeDate[actionId - 1].name }}消耗：
-          </div>
+          <div class="font-bold">消耗：</div>
           <div class="font-bold text-[#f3615f] text-right">
-            <p class="">{{ Number(consumeList[actionId].consume).toFixed(2) }} 元</p>
+            <p class="">
+              {{ Number(consumeList[actionId].consume).toFixed(2) }} 元
+            </p>
             <p class="text-right">
               {{ consumeList[actionId].consumeAmount }} 笔
             </p>
           </div>
         </div>
         <div class="flex items-start text-[26px]">
-          <div class="font-bold">
-            {{ consumeDate[actionId - 1].name }}核销：
-          </div>
+          <div class="font-bold">核销：</div>
           <div class="font-bold text-[#f3615f] text-right">
             <p>{{ Number(consumeList[actionId].work).toFixed(2) }} 元</p>
             <p>{{ consumeList[actionId].workAmount }} 笔</p>
           </div>
         </div>
         <div class="flex items-start text-[26px]">
-          <div class="font-bold">
-            {{ consumeDate[actionId - 1].name }}累积消耗：
-          </div>
+          <div class="font-bold">累积消耗：</div>
           <div class="font-bold text-[#f3615f] text-right">
             <p>{{ Number(consumeList[actionId].totalPoints).toFixed(2) }} 元</p>
             <p>{{ consumeList[actionId].totalPointsAmount }} 笔</p>
@@ -64,23 +65,27 @@
         <div class="flex items-start text-[26px]">
           <div class="font-bold">撬动消费：</div>
           <div class="font-bold text-[#f3615f] text-right">
-            <p>{{ Number(consumeList[actionId].spentResources).toFixed(2) }} 元</p>
+            <p>
+              {{ Number(consumeList[actionId].spentResources).toFixed(2) }} 元
+            </p>
           </div>
         </div>
       </div>
-      <div class="flex items-center justify-between px-[66px]">
-        <div class="relative w-[250px] h-[250px]">
+      <div class="flex items-center justify-between px-[40px]">
+        <div class="relative w-[250px] h-[250px] z-10 text-center w-full">
           <div
             class="absolute top-[50%] left-[50%] z-10 text-center w-full"
             style="transform: translate(-50%, -50%)"
           >
             <p class="font-medium text-[26px] text-[#605d5d]">发放率</p>
-            <p class="font-bold text-[#605d5d] text-[46px] text-[#000000]">66.6%</p>
-            <p class="font-medium text-[#ffffff] text-[26px]">
+            <p class="font-bold text-[#605d5d] text-[46px] text-[#333333]">
+              66.6%
+            </p>
+            <p class="font-medium text-[#333333] text-[26px]">
               总消耗 / 总预算
             </p>
           </div>
-          <LiquidFill :sliderValue="consumePer" :height="250"></LiquidFill>
+          <LiquidFill :sliderValue="consumePer"></LiquidFill>
         </div>
         <div class="relative w-[250px] h-[250px] z-10 text-center w-full">
           <div
@@ -88,12 +93,14 @@
             style="transform: translate(-50%, -50%)"
           >
             <p class="font-medium text-[26px] text-[#605d5d]">核销率</p>
-            <p class="font-bold text-[#605d5d] text-[46px] text-[#000000]">66.6%</p>
-            <p class="font-medium text-[#ffffff] text-[20px]">
+            <p class="font-bold text-[#605d5d] text-[46px] text-[#333333]">
+              66.6%
+            </p>
+            <p class="font-medium text-[#333333] text-[20px]">
               总核销金额 / 总消耗
             </p>
           </div>
-          <LiquidFill :sliderValue="consumePer" :height="250"></LiquidFill>
+          <LiquidFill :sliderValue="consumePer"></LiquidFill>
         </div>
       </div>
     </div>

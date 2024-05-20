@@ -15,17 +15,17 @@ const progressValue = ref(10);
           <p>广发银行信用卡</p>
           <p>新客有礼</p>
         </div>
-        <div class="relative w-[200px] h-[200px]">
+        <div class="relative w-[250px] h-[250px]">
           <div
             class="absolute top-[50%] left-[50%] z-10"
             style="transform: translate(-50%, -50%)"
           >
-            <p class="font-bold text-[26px]">8888000.00</p>
-            <p class="font-medium text-[#605d5d] text-[18px] text-center">
+            <p class="font-bold text-[26px] text-[#333333]">8888000.00</p>
+            <p class="font-medium text-[#333333] text-[18px] text-center">
               已消耗金额
             </p>
           </div>
-          <LiquidFill :sliderValue="consumePer" :height="200"></LiquidFill>
+          <LiquidFill :sliderValue="consumePer"></LiquidFill>
         </div>
       </div>
       <div class="mt-3">
@@ -55,8 +55,34 @@ const progressValue = ref(10);
       </div>
     </div>
     <ConsumptionFrom :consumePer="consumePer" />
-    <BarEcharts/>
-    <div class="w-full h-auto bg-white mt-[20px]">123</div>
+    <BarEcharts />
+    <div class="w-full h-auto bg-white mt-[20px] p-[26px]">
+      <p class="text-2xl font-bold text-[#000000]">计算说明</p>
+      <ul class="explain-list mt-2">
+        <li>
+          <span>总发券金额(总消耗)：</span>总发券笔数 * 优惠券面额
+        </li>
+        <li>
+          <span>总发券笔数：</span>已发放的微信券的总名额（此数据不包含已过期的券，当券设置了有效期，客户领了券未在有效期内使用，被领取的券过期后，名额将释放出来）
+        </li>
+        <li><span>总预算：</span>自定义设定值，如100万</li>
+        <li><span>剩余预算：</span>总预算 - 总发券金额</li>
+        <li><span>总核销金额：</span>总核销笔数 * 优惠券面额</li>
+        <li><span>总核销笔数：</span>已核销的券的总数量</li>
+        <li><span>当日核销金额：</span>当天核销笔数 * 优惠券面额</li>
+        <li><span>当日核销笔数：</span>当天核销的券的总数量</li>
+        <li><span>总预算占比：</span>总核销金额 / 总预算</li>
+        <li><span>总预算消耗占比：</span>总核销金额 / 当前占用总预算</li>
+        <li><span>消费金额：</span>立减券核销后，产生的订单金额</li>
+        <li><span>撬动比：</span>核销金额 / 消费金额</li>
+      </ul>
+    </div>
+    <div
+      class="bg-[#f2f2f2] text-sm font-medium text-center py-3 text-[#9aa0a8]"
+    >
+      <p>广州蓝鼎网络有限公司</p>
+      <p>服务电话：400-8808-248</p>
+    </div>
   </div>
 </template>
 <style lang="less">
@@ -101,6 +127,20 @@ const progressValue = ref(10);
     height: 100%;
     background-color: #3751d7;
     z-index: 6;
+  }
+}
+.explain-list {
+  padding: 0 14px;
+  list-style-type: disc;
+  list-style-position: inside;
+  box-sizing: border-box;
+  color: #333333;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.5em;
+  span{
+    font-weight: bold;
+    color: #5788fb;
   }
 }
 </style>

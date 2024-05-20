@@ -28,6 +28,20 @@ export function isUsercaptchaValue(value) {
 }
 
 // 手机号码验证
+export function isNameValid(name) {
+  const regExp = /^[\u4e00-\u9fa5·\s]{2,20}$/;
+  if (!name) {
+    showToast("请输入名字！");
+    return false;
+  } else if (!regExp.test(name)) {
+    showToast("请输入正确的名字！");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// 手机号码验证
 export function isPhoneNumberValid(phoneNumber) {
   const regExp =
     /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;

@@ -1,13 +1,9 @@
 <template>
-  <div
-    ref="chartInstance"
-    class="w-full"
-    :class="getHeightClass(height)"
-  ></div>
+  <div ref="chartInstance" class="w-full h-[250px]"></div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, markRaw, defineProps, ref, watch, onUnmounted } from "vue";
+import { onMounted, defineProps, ref, onUnmounted } from "vue";
 import * as echarts from "echarts";
 import "echarts-liquidfill";
 
@@ -53,7 +49,7 @@ onMounted(() => {
           center: ["50%", "50%"], // 图形中心坐标
           // 波浪颜色
           itemStyle: {
-            opacity: 0.5, // 透明度
+            opacity: 0.8, // 透明度
             color: "burl", // 统一配置水波的颜色
             shadowBlur: 5 // 水波阴影大小
             // shadowColor: "burl", // 阴影颜色
@@ -135,10 +131,6 @@ onMounted(() => {
     window.addEventListener("resize", resizeChart);
   }
 });
-
-const getHeightClass = height => {
-  return height === 200 ? "h-[200px]" : "h-[250px]";
-};
 
 onUnmounted(() => {
   if (myChart) {

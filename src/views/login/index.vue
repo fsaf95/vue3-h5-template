@@ -1,15 +1,15 @@
 <template>
   <div class="min-h-[100vh] box-border overflow-hidden bg-neutral-50">
     <div class="pt-32 px-11">
-      <div class="flex justify-center">
+      <div class="flex justify-center items-center">
         <van-image
           round
           class="w-[60px] h-[60px]"
           src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
         />
-        <p class="text-3xl">广发银行</p>
+        <p class="text-3xl pl-2">广发银行</p>
       </div>
-      <div class="w-28 h-28 mt-10 mb-6 m-auto overflow-hidden box-border">
+      <div class="w-[120px] h-[120px] mt-10 mb-6 m-auto overflow-hidden box-border">
         <van-image
           round
           class="w-full h-full"
