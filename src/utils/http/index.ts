@@ -8,6 +8,18 @@ import { ContentTypeEnum, ResultEnum } from "@/enums/requestEnum";
 import NProgress from "../progress";
 import { showFailToast } from "vant";
 import "vant/es/toast/style";
+import {
+  calculateValidTime,
+  getRefreshToken,
+  getToken,
+  getTokenType,
+  handleLocalStorage,
+  isRefreshTokenExpired
+} from "@/utils/token";
+import { smsRefresh } from "@/api";
+import router from '@/router'; // 根据你的项目结构来导入 router
+
+let isRefreshing = false; // 是否正在刷新的标记
 
 // 默认 axios 实例请求配置
 const configDefault = {
@@ -31,9 +43,31 @@ class Http {
       config => {
         NProgress.start();
         // 发送请求前，可在此携带 token
-        // if (token) {
-        //   config.headers['token'] = token
-        // }
+        if (getToken()) {
+          // 有效时间小于0分钟
+          if (isRefreshTokenExpired()) {
+            if (!isRefreshing) {
+              isRefreshing = true;
+              smsRefresh({ token_type: getTokenType(), refresh_token: getRefreshToken() })
+                .then((res) => {
+                  if (res.code !== 0) {
+
+                  } else {
+                    handleLocalStorage(res.data); // 存储新的token和刷新token
+                    calculateValidTime(res.data.expires_in); // 计算token的有效时间
+                    isRefreshing = false;
+                  }
+                }).catch(error => {
+
+              });
+            }
+          } else {
+            // 有效时间不小于一分钟
+            if (!isRefreshTokenExpired(true)) {
+              config.headers["Authorization"] = getTokenType() + " " + getToken();
+            }
+          }
+        }
         return config;
       },
       (error: AxiosError) => {
@@ -49,17 +83,21 @@ class Http {
       (response: AxiosResponse) => {
         NProgress.done();
         // 与后端协定的返回字段
-        const { code, message, result } = response.data;
+        const { code, msg, data } = response.data;
         // 判断请求是否成功
         const isSuccess =
-          result &&
+          data &&
           Reflect.has(response.data, "code") &&
           code === ResultEnum.SUCCESS;
         if (isSuccess) {
-          return result;
+          return response.data;
         } else {
           // 处理请求错误
-          // showFailToast(message);
+          showFailToast(msg);
+          const redirect = window.location.pathname + window.location.search;
+          if (code === 400031 || code === 400030 || code === 4031) {
+            router.push({path: "/login",query:{redirect}})
+          }
           return Promise.reject(response.data);
         }
       },

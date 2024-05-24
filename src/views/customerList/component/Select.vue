@@ -6,7 +6,6 @@
       v-model="selectedPet"
       @change="handlePetChange"
     >
-      <option value="">-- 领取状态 --</option>
       <option v-for="pet in pets" :key="pet.value" :value="pet.value">
         {{ pet.label }}
       </option>
@@ -32,8 +31,11 @@ const emit = defineEmits(["handleSelected"]);
 // 响应式数据
 const selectedPet = ref(props.initialPet);
 const pets = ref([
-  { value: "2", label: "已领取" },
-  { value: "1", label: "未领取" }
+  { value: "", label: "领取状态" },
+  { value: "0", label: "未领取" },
+  { value: "1", label: "发放中" },
+  { value: "2", label: "领取成功" },
+  { value: "5", label: "领取失败" },
 ]);
 
 // 监听选中值的变化

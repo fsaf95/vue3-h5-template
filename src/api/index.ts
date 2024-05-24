@@ -6,9 +6,22 @@ type ListResult = {
   data: Array<any>;
 };
 
+interface customerType {
+  keyword?: string;
+  obtain_status?: number;
+  page?: number;
+}
+
+// 增加客户
+interface addCustomer {
+  mobile?: string
+  customer_name?: string
+  act_id?: string
+}
+
 export function loginSms(data?: object): Promise<ListResult> {
   return http.request({
-    url: "'/page/boc/sms/LoginSms",
+    url: "/page/bank/sms/" + "EgpVlNOMV" + "/" + "JwYRbnRVr",
     method: "post",
     data
   });
@@ -16,7 +29,69 @@ export function loginSms(data?: object): Promise<ListResult> {
 
 export function login(data?: object): Promise<ListResult> {
   return http.request({
-    url: "'/page/login/LoginSms",
+    url: "/page/bank/manager/loginByManager/" + "EgpVlNOMV",
+    method: "post",
+    data
+  });
+}
+
+// 新增客户
+export function createCustomer(data: addCustomer): Promise<ListResult> {
+  return http.request({
+    url: "/page/bank/manager/createCustomer/" + "EgpVlNOMV",
+    method: "post",
+    data
+  });
+}
+
+// 获取客户经理信息
+export function getManager(data?: object): Promise<ListResult> {
+  return http.request({
+    url: "/page/bank/manager/getManager/" + "EgpVlNOMV",
+    method: "post",
+    data
+  });
+}
+
+//客户名单
+export function searchCustomer(data?: customerType): Promise<ListResult> {
+  return http.request({
+    url: "/page/bank/manager/searchCustomer/" + "EgpVlNOMV",
+    method: "post",
+    data
+  });
+}
+
+//刷新token
+export function smsRefresh(data?: object): Promise<ListResult> {
+  return http.request({
+    url: "/page/boc/refresh_token/" + "EgpVlNOMV",
+    method: "post",
+    headers: { Authorization: data.token_type + " " + data.refresh_token }
+  });
+}
+
+// 数据看板总数据
+export function getCommonStatics(data?: object): Promise<ListResult> {
+  return http.request({
+    url: "/page/bank/manager/getCommonStatics/" + "EgpVlNOMV",
+    method: "post",
+    data
+  });
+}
+
+// 数据看板券统计数据
+export function getStaticsData(data?: any): Promise<ListResult> {
+  return http.request({
+    url: "/page/bank/manager/getStaticsData/" + "EgpVlNOMV",
+    method: "post",
+    data
+  });
+}
+
+export function getStaticsDataByTime(data?: any): Promise<ListResult> {
+  return http.request({
+    url: "/page/bank/manager/getStaticsDataByTime/" + "EgpVlNOMV",
     method: "post",
     data
   });

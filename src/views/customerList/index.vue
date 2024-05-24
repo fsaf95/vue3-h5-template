@@ -1,110 +1,33 @@
 <script setup lang="ts" name="Tools">
-import "vant/es/toast/style";
 import Select from "./component/Select.vue";
 import CustomerTable from "./component/CustomerTable.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { isNameValid, isPhoneNumberValid } from "@/utils/utils";
-import { showToast } from "vant";
+import { showFailToast, showToast } from "vant";
+import { createCustomer, searchCustomer } from "@/api";
+import headBg from "@/assets/head-bg.png"
 
-const nameInfo: string = ref("");
-const allData: any = ref([
-  {
-    id: 1,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 2,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 2,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 1,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 3,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 2,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 4,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 1,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 5,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 2,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 6,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 1,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 7,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 2,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 8,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 2,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 9,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 1,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 10,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 2,
-    amount: 100,
-    couponTime: "2023-01-01"
-  },
-  {
-    id: 11,
-    name: "张三",
-    phone: "123456789",
-    couponStatus: 2,
-    amount: 100,
-    couponTime: "2023-01-01"
-  }
-]);
+const allData: any[] = ref([]); // 列表数据
 const overlayShow: boolean = ref(false);
-const selectedValue: number = ref(0);
 const formUser = ref({
-  userName: "",
-  userPhone: "",
+  customer_name: "", // 姓名
+  mobile: "", // 手机号码
   userBranch: "",
-  userActivity: ""
+  act_id: "" // 活动id
 });
+
+const pageData = ref({
+  total_count: 0, //记录总数
+  current_page: 0, //当前页
+  per_page: 0,//页大小
+  last_page: 0 // 最后页
+});
+
+const searchData = ref({
+  obtain_status: '', // 领取状态
+  keyword: ""  // 姓名或手机号码
+});
+
 const branchList = ref([
   { id: 1, value: "广州" },
   { id: 2, value: "深圳" },
@@ -112,39 +35,59 @@ const branchList = ref([
 ]);
 
 const activityList = ref([
-  { id: 1, value: "中国银行" },
-  { id: 2, value: "农业银行" },
-  { id: 3, value: "北京银行" }
+  { id: 39, value: "新客有礼券包80元" }
 ]);
 
-// 查询
+onMounted(() => {
+  getCustomerList({});
+});
+
+// 客户名单列表
+const getCustomerList = (data) => {
+  searchCustomer(data).then(res => {
+    allData.value = res.data.data;
+    pageData.value.total_count = res.data.total_count;
+    pageData.value.current_page = res.data.current_page;
+    pageData.value.per_page = res.data.per_page;
+    pageData.value.last_page = res.data.last_page;
+  }).catch(error => {
+    showFailToast(error);
+  });
+};
+
+const handlePageChanged = (value) =>{
+  pageData.value.current_page = value
+  getCustomerList({page:pageData.value.current_page})
+}
+
+// 列表搜索
 const handleInquire = () => {
-  allData.value = allData.value.filter(
-    item => item.couponStatus === Number(selectedValue.value)
-  );
-  console.log(allData.value, selectedValue.value, 1111);
+  getCustomerList(searchData.value);
 };
 
-// 获取select选项框选中的值
 const handlePetSelected = selectedPetValue => {
-  // 处理接收到的值
-  selectedValue.value = selectedPetValue;
+  searchData.value.obtain_status = selectedPetValue; // 列表的领取状态
 };
 
-const handleNewCustomer = () => {
-  overlayShow.value = true;
-};
-
+// 新增客户白名单
 const onSubmit = () => {
-  if (!isNameValid(formUser.value.userName)) {
+  if (!isNameValid(formUser.value.customer_name)) {
     return;
   }
   //验证手机号码是否正确
-  if (!isPhoneNumberValid(formUser.value.userPhone)) {
+  if (!isPhoneNumberValid(formUser.value.mobile)) {
     return;
   }
   if (!formUser.value.userBranch) return showToast("请选择网点支行");
-  if (!formUser.value.userActivity) return showToast("请选择活动");
+  if (!formUser.value.act_id) return showToast("请选择活动");
+  createCustomer(formUser.value).then(res => {
+    if (res.code !== 0) {
+      showFailToast(res.msg);
+    } else {
+      showToast(res.msg);
+      overlayShow.value = false;
+    }
+  });
 };
 </script>
 
@@ -154,30 +97,33 @@ const onSubmit = () => {
       <van-image
         width="100%"
         height="100%"
-        src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+        :src="headBg"
       />
     </div>
     <div class="px-[26px] py-[40px] overflow-hidden">
       <div class="flex items-center justify-between">
         <Select @handleSelected="handlePetSelected" />
-        <input
-          v-model="nameInfo"
-          placeholder="输入姓名或手机号"
-          class="input-info"
-        />
+        <van-cell-group>
+          <van-field
+            class="input-info"
+            v-model="searchData.keyword"
+            center
+            clearable
+            placeholder="输入姓名或手机号"
+          ></van-field>
+        </van-cell-group>
         <van-button
           type="danger"
           class="w-[100px] !h-[70px] !rounded-[10px] !text-[24px]"
           @click="handleInquire"
-          >搜索
+        >搜索
         </van-button>
       </div>
-      <div>
-        <CustomerTable :allData="allData" />
-      </div>
+      <CustomerTable :allData="allData" :total_count="pageData.total_count" :current_page="pageData.current_page"
+                     :per_page="pageData.per_page" :last_page="pageData.last_page" @pageChanged="handlePageChanged" />
       <div
         class="m-auto w-[380px] px-[20px] py-[10px] text-center rounded-[40px] text-[32px] text-[#ffffff] bg-[#ec0e07]"
-        @click="handleNewCustomer"
+        @click="overlayShow = true;"
       >
         新增客户
       </div>
@@ -198,7 +144,7 @@ const onSubmit = () => {
           </div>
           <input
             class="flex-auto ml-[20px] py-[10px] px-[20px] bg-[#f2f2f2] border-[2px] border-[#e0e0e0] border-solid rounded-[10px] text-[#333333]"
-            v-model="formUser.userName"
+            v-model="formUser.customer_name"
             name="姓名"
             placeholder="请输入姓名"
           />
@@ -209,7 +155,7 @@ const onSubmit = () => {
           </div>
           <input
             class="flex-auto ml-[20px] py-[10px] px-[20px] bg-[#f2f2f2] border-[2px] border-[#e0e0e0] border-solid rounded-[10px] text-[#333333]"
-            v-model="formUser.userPhone"
+            v-model="formUser.mobile"
             name="手机号"
             maxlength="11"
             placeholder="请输入手机号"
@@ -239,13 +185,13 @@ const onSubmit = () => {
             class="flex-auto ml-[20px] py-[10px] px-[20px] bg-[#ffffff] border-[2px] border-[#e0e0e0] border-solid rounded-[10px] text-[#333333]"
             name="pets"
             id="pet-select"
-            v-model="formUser.userActivity"
+            v-model="formUser.act_id"
             placeholder="请选择网点支行"
           >
             <option
               v-for="pet in activityList"
               :key="pet.value"
-              :value="pet.value"
+              :value="pet.id"
             >
               {{ pet.value }}
             </option>
@@ -266,9 +212,11 @@ const onSubmit = () => {
   </van-overlay>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
+
 .input-info {
-  padding: 14px 10px;
+  width: 350px;
+  padding: 12px 20px;
   font-size: 26px;
   color: #333333;
   border-radius: 10px;
@@ -299,6 +247,12 @@ const onSubmit = () => {
     justify-content: center;
     color: #ffffff;
   }
+}
+
+.van-toast {
+  --van-toast-font-size: 34px;
+  --van-toast-text-padding: 10px 20px;
+  --van-toast-line-height: 1.6em;
 }
 
 .van-field {

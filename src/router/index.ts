@@ -30,11 +30,9 @@ router.beforeEach((to: toRouteType, from, next) => {
   setPageTitle(to.meta.title);
   // 检查目标路由是否需要身份验证
   if (to.matched.some(record => record.meta.requireAuth)) {
-    console.log(333,to.matched.some(record => record.meta.requireAuth));
     // 检查是否已登录（这里只是一个示例，你可能需要更复杂的逻辑）
     const token = localStorage.getItem("GF_TOKEN");
     if (token) {
-      console.log("已登录");
       //  已登录，继续导航
       next();
     } else {

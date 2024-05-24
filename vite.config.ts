@@ -64,6 +64,9 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "^/dev-api": {
           target: ""
+        },
+        '^/api' :{
+          target: "https://api.ldvip.cn"
         }
       }
     },

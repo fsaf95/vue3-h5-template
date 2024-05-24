@@ -41,33 +41,31 @@
           <div class="font-bold">消耗：</div>
           <div class="font-bold text-[#f3615f] text-right">
             <p class="">
-              {{ Number(consumeList[actionId].consume).toFixed(2) }} 元
+              {{ Number(staticsData.consumption).toFixed(2) }} 元
             </p>
             <p class="text-right">
-              {{ consumeList[actionId].consumeAmount }} 笔
+              {{ staticsData.verification_amount }} 笔
             </p>
           </div>
         </div>
         <div class="flex items-start text-[26px]">
           <div class="font-bold">核销：</div>
           <div class="font-bold text-[#f3615f] text-right">
-            <p>{{ Number(consumeList[actionId].work).toFixed(2) }} 元</p>
-            <p>{{ consumeList[actionId].workAmount }} 笔</p>
+            <p>{{ Number(staticsData.verification_amount).toFixed(2) }} 元</p>
+            <p>{{ staticsData.verification_amount }} 笔</p>
           </div>
         </div>
         <div class="flex items-start text-[26px]">
           <div class="font-bold">累积消耗：</div>
           <div class="font-bold text-[#f3615f] text-right">
-            <p>{{ Number(consumeList[actionId].totalPoints).toFixed(2) }} 元</p>
-            <p>{{ consumeList[actionId].totalPointsAmount }} 笔</p>
+            <p>{{ Number(staticsData.consumption).toFixed(2) }} 元</p>
+            <p>{{ staticsData.consumption }} 笔</p>
           </div>
         </div>
-        <div class="flex items-start text-[26px]">
-          <div class="font-bold">撬动消费：</div>
+        <div class="flex items-start text-[26px]" v-if="staticsData.toker_count">
+          <div class="font-bold">拓客人数：</div>
           <div class="font-bold text-[#f3615f] text-right">
-            <p>
-              {{ Number(consumeList[actionId].spentResources).toFixed(2) }} 元
-            </p>
+            <p>{{ Number(staticsData.toker_count) }} 人</p>
           </div>
         </div>
       </div>
@@ -85,7 +83,7 @@
               总消耗 / 总预算
             </p>
           </div>
-          <LiquidFill :sliderValue="consumePer"></LiquidFill>
+          <LiquidFill :sliderValue="aaa"></LiquidFill>
         </div>
         <div class="relative w-[250px] h-[250px] z-10 text-center w-full">
           <div
@@ -100,7 +98,7 @@
               总核销金额 / 总消耗
             </p>
           </div>
-          <LiquidFill :sliderValue="consumePer"></LiquidFill>
+          <LiquidFill :sliderValue="aaa"></LiquidFill>
         </div>
       </div>
     </div>
@@ -108,74 +106,59 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import LiquidFill from "@/views/demo/component/LiquidFill.vue";
+import { getStaticsData } from "@/api/index.ts";
+import { showFailToast } from "vant";
 
-interface Props {
-  consumePer: unknown;
-}
-
-const props = defineProps<Props>();
 const isDropdownVisible = ref(false);
 const selectedItem = ref("立减和折扣"); // 用来存储选中的项目
-const actionId = ref(1);
+const timeFrame = ref("today");
+const staticsData = ref({});
+const aaa:number = ref(0.005)
 
 const dropdownItems = ref([
   { id: 1, name: "立减和折扣" },
-  { id: 2, name: "代金券" }
 ]);
 
 const consumeDate = ref([
-  { id: 1, state: true, name: "今日" },
-  { id: 2, state: false, name: "昨日" },
-  { id: 3, state: false, name: "本月" },
-  { id: 4, state: false, name: "本年" }
+  { id: 1, state: true, name: "今日", value: "today" },
+  { id: 2, state: false, name: "昨日", value: "yesterday" },
+  { id: 3, state: false, name: "本月", value: "current_month" },
+  { id: 4, state: false, name: "本年", value: "current_year" }
 ]);
 
-const consumeList = ref({
-  1: {
-    consume: "123123",
-    work: "1515",
-    workAmount: "100",
-    consumeAmount: "66",
-    totalPoints: "5645",
-    totalPointsAmount: "12",
-    spentResources: "151211"
-  },
-  2: {
-    consume: "322",
-    work: "422323",
-    workAmount: "4221",
-    consumeAmount: "66",
-    totalPoints: "424",
-    totalPointsAmount: "23",
-    spentResources: "5343"
-  },
-  3: {
-    consume: "53232",
-    work: "2233",
-    workAmount: "12",
-    consumeAmount: "23",
-    totalPoints: "42233",
-    totalPointsAmount: "42",
-    spentResources: "412332"
-  },
-  4: {
-    consume: "231",
-    work: "42342",
-    workAmount: "42",
-    consumeAmount: "423",
-    totalPoints: "4242",
-    totalPointsAmount: "32",
-    spentResources: "452132"
-  }
+onMounted(() => {
+  handleGetStaticsData({ time_frame: timeFrame.value });
 });
+
+// 已消耗金额 水波图的值
+const spikeRate: number = computed(()=>{
+  // if (totalBudget.value > 0) {
+  //   return total_consumption.value / totalBudget.value    // 计算百分比，并乘以100转换为百分比形式
+  // } else {
+  //   return 0; // 如果总预算为0，则返回0%
+  // }
+});
+
+const handleGetStaticsData = (data) => {
+  getStaticsData(data).then((res) => {
+    if (res.code !== 0) {
+      showFailToast(res.msg);
+    } else {
+      staticsData.value = res.data;
+    }
+  });
+};
+
 const handleAction = data => {
-  actionId.value = data.id;
+  timeFrame.value = data.value;
   consumeDate.value.forEach(item => {
     item.state = item.id === data.id;
   });
+  handleGetStaticsData({ time_frame: timeFrame.value });
 };
+
 const selectItem = (item: object) => {
   selectedItem.value = item.name; // 更新选中的项目
   isDropdownVisible.value = false; // 关闭下拉菜单

@@ -1,19 +1,20 @@
 <template>
   <div class="min-h-[100vh] box-border overflow-hidden bg-neutral-50">
-    <div class="pt-32 px-11">
+    <div class="pt-32 px-[70px]">
       <div class="flex justify-center items-center">
         <van-image
           round
-          class="w-[60px] h-[60px]"
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+          class="w-[420px] h-[160px]"
+          :src="iconLogo"
+          alt=""
         />
-        <p class="text-3xl pl-2">广发银行</p>
+        <!--        <p class="text-3xl pl-2">广发银行</p>-->
       </div>
       <div class="w-[120px] h-[120px] mt-10 mb-6 m-auto overflow-hidden box-border">
         <van-image
           round
           class="w-full h-full"
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+          :src="iconUser"
         />
       </div>
       <div class="mt-6 overflow-hidden box-border">
@@ -37,7 +38,7 @@
             placeholder="请输入短信验证码"
           />
           <van-button
-            class="!absolute !px-2 !h-full !right-0 !text-sm"
+            class="!absolute !px-2 !h-full !right-0 !text-sm !rounded-r-lg"
             size="small"
             type="primary"
             :disabled="infoUser.flag"
@@ -66,21 +67,24 @@
 
 <script setup lang="ts" name="Login">
 import { ref, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useUser } from "@/store/user";
 import { isPhoneNumberValid, isUsercaptchaValue } from "@/utils/utils";
 import { showFailToast, showSuccessToast } from "vant";
 import { login, loginSms } from "@/api";
 import { calculateValidTime } from "@/utils/token";
+import * as path from "path";
+import iconLogo from "@/assets/gf-logo.png";
+import iconUser from "@/assets/icon-logo.png";
 
 const infoUser = useUser();
 const route = useRoute();
+const router = useRouter();
 
 const return_url = ref("");
 
 onMounted(() => {
-  console.log(infoUser.userCaptcha, 80);
-  return_url.value = route.query.redirect;
+  return_url.value = route.query;
 });
 
 const zhudState = computed(() => {
@@ -99,7 +103,7 @@ const sendCode = async () => {
   }
   if (infoUser.flag === false) {
     // 调用 验证码api接口
-    await loginSms({ mobile: infoUser.userPhone })
+    await loginSms({ mobile: infoUser.userPhone, login_scene: "manager" })
       .then(res => {
         if (res.code === 0) {
           infoUser.flag = true;
@@ -108,9 +112,8 @@ const sendCode = async () => {
         } else {
           showFailToast(res.msg);
         }
-      })
-      .catch(() => {
-        showFailToast("服务器开小差了，请刷新后重试");
+      }).catch(() => {
+        showFailToast("服务器开小差了，请刷新后重试1111111111111");
       });
   }
 };
@@ -135,6 +138,11 @@ const apiGetLogin = () => {
       if (res.code === 0) {
         infoUser.handleTokenChange(res.data.token);
         calculateValidTime(res.data.token.expires_in); // 计算token的有效时间
+        if (return_url.value.redirect) {
+          router.push(return_url.value.redirect);
+        } else {
+          router.push({ path: "/demo" });
+        }
       } else {
         showFailToast(res.msg);
       }
@@ -146,4 +154,10 @@ const apiGetLogin = () => {
 };
 </script>
 
-<style scoped></style>
+<style lang="less">
+.van-toast {
+  --van-toast-font-size: 34px;
+  --van-toast-text-padding: 10px 20px;
+  --van-toast-line-height: 1.6em;
+}
+</style>

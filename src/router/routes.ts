@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
         component: Demo,
         meta: {
           title: "主页",
-          requireAuth: false
+          requireAuth: true
         }
       },
       {
@@ -24,17 +24,22 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/customerList/index.vue"),
         meta: {
           title: "客户",
-          requireAuth: false
+          requireAuth: true
         }
       },
+      // {
+      //   path: "/about",
+      //   name: "About",
+      //   component: () => import("@/views/about/index.vue"),
+      //   meta: {
+      //     title: "关于",
+      //     noCache: true // 关闭缓存
+      //   }
+      // },
+      // 重定向所有未找到的路由到首页
       {
-        path: "/about",
-        name: "About",
-        component: () => import("@/views/about/index.vue"),
-        meta: {
-          title: "关于",
-          noCache: true // 关闭缓存
-        }
+        path: '/:catchAll(.*)',
+        redirect: '/' // 重定向到首页
       }
     ]
   },
@@ -44,6 +49,10 @@ const routes: Array<RouteRecordRaw> = [
     meta: { title: "登录", requireAuth: false },
     component: () => import("@/views/login/index.vue")
   },
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/404.vue') // 引入你的 404 页面组件
+  }
 ];
 
 export default routes;

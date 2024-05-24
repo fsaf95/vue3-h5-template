@@ -1,10 +1,57 @@
 <script setup lang="ts" name="Demo">
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 import LiquidFill from "./component/LiquidFill.vue";
 import ConsumptionFrom from "./component/ConsumptionFrom.vue";
 import BarEcharts from "@/views/demo/component/barEcharts.vue";
-const consumePer = ref(0.4);
-const progressValue = ref(10);
+import { getCommonStatics } from "@/api";
+import { showFailToast } from "vant";
+
+const totalBudget = ref(""); // 总预算
+const totalConsumption = ref(""); // 总消耗
+
+// 已消耗金额 水波图的值
+const consumePer: number = computed(()=>{
+  if (totalBudget.value > 0) {
+    return totalConsumption.value / totalBudget.value    // 计算百分比，并乘以100转换为百分比形式
+  } else {
+    return 0; // 如果总预算为0，则返回0%
+  }
+});
+
+// 使用computed来计算百分比，并赋值给progressValue
+const progressValue = computed(() => {
+  // 确保分母不为0，避免除以0的错误
+  if (totalBudget.value > 0) {
+    // 计算百分比，并乘以100转换为百分比形式
+    return (totalConsumption.value / totalBudget.value) * 100;
+  } else {
+    return 0; // 如果总预算为0，则返回0%
+  }
+});
+
+const progressValue1 = computed(() => {
+  if ((totalConsumption.value / totalBudget.value) * 100 >= 99) {
+    return ((totalConsumption.value / totalBudget.value) * 100) - 2;
+  }else{
+    return (totalConsumption.value / totalBudget.value) * 100;
+  }
+});
+
+onMounted(() => {
+  handleGetCommonStatics();
+});
+
+
+const handleGetCommonStatics = () => {
+  getCommonStatics().then(res => {
+    if (res.code !== 0) {
+      showFailToast(res.msg);
+    } else {
+      totalBudget.value = res.data.total_budget;
+      totalConsumption.value = res.data.total_consumption;
+    }
+  });
+};
 </script>
 
 <template>
@@ -17,44 +64,39 @@ const progressValue = ref(10);
         </div>
         <div class="relative w-[250px] h-[250px]">
           <div
-            class="absolute top-[50%] left-[50%] z-10"
+            class="absolute top-[50%] left-[50%] w-[90%] text-center text-[#333333] z-10"
             style="transform: translate(-50%, -50%)"
           >
-            <p class="font-bold text-[26px] text-[#333333]">8888000.00</p>
-            <p class="font-medium text-[#333333] text-[18px] text-center">
-              已消耗金额
-            </p>
+            <p class="font-bold text-[36px] ">{{ Number(totalConsumption).toFixed(2) }}</p>
+            <p class="font-medium text-[28px]">已消耗金额</p>
           </div>
           <LiquidFill :sliderValue="consumePer"></LiquidFill>
         </div>
       </div>
       <div class="mt-3">
         <p class="text-base font-bold">消耗进度</p>
-        <div class="flex items-end box-border overflow-hidden">
-          <div class="flex-auto progress-con box-border">
-            <div
-              class="pointer text-[24px]"
-              :style="{ left: progressValue + '%' }"
-            >
-              <div>10元</div>
+        <div class="progress-box flex items-end box-border">
+          <div class="pointer-box">
+            <div class="pointer" :style="{ left: progressValue1 + '%' }">
+              <div class="text-[26px] font-bold text-[#333333]">{{ totalConsumption }}元</div>
               <div class="dot"></div>
             </div>
-            <div class="progress-bar">
-              <div
-                class="progress-bar-b"
-                :style="{ width: progressValue + 3 + '%' }"
-              ></div>
-            </div>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-bar-b"
+              :style="{ width: progressValue + 1 + '%' }"
+            ></div>
           </div>
           <div class="flex-none pl-4 text-[24px]">总预算</div>
         </div>
         <div class="flex justify-between box-border pr-[40px] text-[24px]">
           <p>0元</p>
-          <p>1000000元</p>
+          <p>{{ totalBudget }}元</p>
         </div>
       </div>
     </div>
-    <ConsumptionFrom :consumePer="consumePer" />
+    <ConsumptionFrom />
     <BarEcharts />
     <div class="w-full h-auto bg-white mt-[20px] p-[26px]">
       <p class="text-2xl font-bold text-[#000000]">计算说明</p>
@@ -86,21 +128,22 @@ const progressValue = ref(10);
   </div>
 </template>
 <style lang="less">
-.progress-con {
+.progress-box {
   position: relative;
-  display: flex;
-  align-items: flex-end; /* 修改这里 */
-  padding-bottom: 13px;
   width: 100%;
-  height: 100px;
-  box-sizing: border-box;
-  overflow: hidden;
+  height: 80px;
 
+  .pointer-box{
+    position: absolute;
+    width: 540px;
+    height: 100%;
+  }
   .pointer {
     position: absolute;
-    bottom: 6px;
+    bottom: 2px;
     left: 0;
-    z-index: 5;
+    z-index: 1;
+    width: 120px;
 
     .dot {
       width: 30px;
@@ -111,10 +154,20 @@ const progressValue = ref(10);
   }
 }
 
+.progress-con {
+  position: relative;
+  display: flex;
+  align-items: flex-end; /* 修改这里 */
+  width: 100%;
+  height: 100px;
+  box-sizing: border-box;
+}
+
 .progress-bar {
+  margin-bottom: 6px;
   position: relative;
   width: 100%;
-  height: 16px;
+  height: 20px;
   border-radius: 20px;
   background-color: #f0f0f0;
   overflow: hidden;
@@ -126,9 +179,9 @@ const progressValue = ref(10);
     width: 10%;
     height: 100%;
     background-color: #3751d7;
-    z-index: 6;
   }
 }
+
 .explain-list {
   padding: 0 14px;
   list-style-type: disc;
@@ -138,7 +191,8 @@ const progressValue = ref(10);
   font-size: 28px;
   font-weight: 500;
   line-height: 1.5em;
-  span{
+
+  span {
     font-weight: bold;
     color: #5788fb;
   }

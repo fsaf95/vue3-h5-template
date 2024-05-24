@@ -6,6 +6,7 @@ import { handleLocalStorage } from "@/utils/token";
 export const User = defineStore({
   id: 'user',
   state: () => ({
+    userInfo:{}, // 客户经理详细信息
     userPhone: "", //手机号码
     userCaptcha: "", //验证码
     buttonMsg: "获取验证码", //验证码提示语
