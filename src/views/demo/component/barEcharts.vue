@@ -171,7 +171,7 @@ const handleGetStaticsDataByTime = async (data) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 360px;
+  width: 380px;
 
   .consume-date-btn {
     padding: 10px 28px;

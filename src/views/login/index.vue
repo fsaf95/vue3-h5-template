@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-[100vh] box-border overflow-hidden bg-neutral-50">
-    <div class="pt-32 px-[70px]">
+    <div class="pt-20 px-[90px]">
       <div class="flex justify-center items-center">
         <van-image
           round
@@ -10,18 +10,18 @@
         />
         <!--        <p class="text-3xl pl-2">广发银行</p>-->
       </div>
-      <div class="w-[120px] h-[120px] mt-10 mb-6 m-auto overflow-hidden box-border">
+      <div class="w-[120px] h-[120px] mt-12 mb-6 m-auto overflow-hidden box-border">
         <van-image
           round
           class="w-full h-full"
           :src="iconUser"
         />
       </div>
-      <div class="mt-6 overflow-hidden box-border">
-        <div class="flex items-center text-lg">
+      <div class="mt-[80px] overflow-hidden box-border">
+        <div class="flex items-center text-[32px]">
           <p class="flex-none">手机号：</p>
           <input
-            class="flex-auto py-1.5 px-2 rounded-lg border-4"
+            class="flex-auto py-[18px] px-2 text-[26px] rounded-lg border-4"
             v-model="infoUser.userPhone"
             name="手机号"
             type="tel"
@@ -29,16 +29,16 @@
             maxlength="11"
           />
         </div>
-        <div class="flex items-center text-lg relative mt-4">
+        <div class="flex items-center text-[32px] relative mt-4">
           <p class="flex-none">验证码：</p>
           <input
-            class="flex-auto py-1.5 px-2 rounded-lg border-4"
+            class="flex-auto py-[18px] px-2 text-[26px] rounded-lg border-4"
             v-model="infoUser.userCaptcha"
             maxlength="6"
             placeholder="请输入短信验证码"
           />
           <van-button
-            class="!absolute !px-2 !h-full !right-0 !text-sm !rounded-r-lg"
+            class="!absolute !px-2 !h-full !right-0 !text-[26px] !rounded-r-lg"
             size="small"
             type="primary"
             :disabled="infoUser.flag"
@@ -75,7 +75,7 @@ import { login, loginSms } from "@/api";
 import { calculateValidTime } from "@/utils/token";
 import * as path from "path";
 import iconLogo from "@/assets/gf-logo.png";
-import iconUser from "@/assets/icon-logo.png";
+import iconUser from "@/assets/user.png";
 
 const infoUser = useUser();
 const route = useRoute();
@@ -105,15 +105,15 @@ const sendCode = async () => {
     // 调用 验证码api接口
     await loginSms({ mobile: infoUser.userPhone, login_scene: "manager" })
       .then(res => {
-        if (res.code === 0) {
+        if (res.code !== 0) {
+          showFailToast(res.msg);
+        } else {
           infoUser.flag = true;
           infoUser.handleCountDownChange();
           showSuccessToast(res.msg);
-        } else {
-          showFailToast(res.msg);
         }
-      }).catch(() => {
-        showFailToast("服务器开小差了，请刷新后重试1111111111111");
+      }).catch((error) => {
+        showFailToast(error.msg);
       });
   }
 };

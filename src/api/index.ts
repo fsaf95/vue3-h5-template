@@ -21,7 +21,7 @@ interface addCustomer {
 
 export function loginSms(data?: object): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/sms/" + "EgpVlNOMV" + "/" + "JwYRbnRVr",
+    url: "/page/bank/sms/" + "5jQZ537gd" + "/" + "JwYRbnRVr",
     method: "post",
     data
   });
@@ -29,7 +29,7 @@ export function loginSms(data?: object): Promise<ListResult> {
 
 export function login(data?: object): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/manager/loginByManager/" + "EgpVlNOMV",
+    url: "/page/bank/manager/loginByManager/" + "5jQZ537gd",
     method: "post",
     data
   });
@@ -38,7 +38,7 @@ export function login(data?: object): Promise<ListResult> {
 // 新增客户
 export function createCustomer(data: addCustomer): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/manager/createCustomer/" + "EgpVlNOMV",
+    url: "/page/bank/manager/createCustomer/" + "5jQZ537gd",
     method: "post",
     data
   });
@@ -47,7 +47,7 @@ export function createCustomer(data: addCustomer): Promise<ListResult> {
 // 获取客户经理信息
 export function getManager(data?: object): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/manager/getManager/" + "EgpVlNOMV",
+    url: "/page/bank/manager/getManager/" + "5jQZ537gd",
     method: "post",
     data
   });
@@ -56,7 +56,7 @@ export function getManager(data?: object): Promise<ListResult> {
 //客户名单
 export function searchCustomer(data?: customerType): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/manager/searchCustomer/" + "EgpVlNOMV",
+    url: "/page/bank/manager/searchCustomer/" + "5jQZ537gd",
     method: "post",
     data
   });
@@ -65,7 +65,7 @@ export function searchCustomer(data?: customerType): Promise<ListResult> {
 //刷新token
 export function smsRefresh(data?: object): Promise<ListResult> {
   return http.request({
-    url: "/page/boc/refresh_token/" + "EgpVlNOMV",
+    url: "/page/boc/refresh_token/" + "5jQZ537gd",
     method: "post",
     headers: { Authorization: data.token_type + " " + data.refresh_token }
   });
@@ -74,7 +74,7 @@ export function smsRefresh(data?: object): Promise<ListResult> {
 // 数据看板总数据
 export function getCommonStatics(data?: object): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/manager/getCommonStatics/" + "EgpVlNOMV",
+    url: "/page/bank/manager/getCommonStatics/" + "5jQZ537gd",
     method: "post",
     data
   });
@@ -83,7 +83,7 @@ export function getCommonStatics(data?: object): Promise<ListResult> {
 // 数据看板券统计数据
 export function getStaticsData(data?: any): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/manager/getStaticsData/" + "EgpVlNOMV",
+    url: "/page/bank/manager/getStaticsData/" + "5jQZ537gd",
     method: "post",
     data
   });
@@ -91,7 +91,7 @@ export function getStaticsData(data?: any): Promise<ListResult> {
 
 export function getStaticsDataByTime(data?: any): Promise<ListResult> {
   return http.request({
-    url: "/page/bank/manager/getStaticsDataByTime/" + "EgpVlNOMV",
+    url: "/page/bank/manager/getStaticsDataByTime/" + "5jQZ537gd",
     method: "post",
     data
   });

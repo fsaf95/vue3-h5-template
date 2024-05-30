@@ -1,5 +1,5 @@
 <template>
-  <div class="my-[30px] box-border">
+  <div class="mt-[30px] mb-[60px] box-border">
     <div class="w-full">
       <!-- 表格头部 -->
       <div>
@@ -17,7 +17,7 @@
       <div
         v-for="(item, index) in props.allData"
         :key="index"
-        class="my-[10px] py-[10px] px-[20px] bg-[#f2f2f2] flex justify-between overflow-hidden border-[2px] border-[#e0e0e0] border-solid rounded-[10px] text-[#333333] text-[24px]"
+        class="my-[10px] h-[90px] py-[10px] px-[20px] bg-[#f2f2f2] flex justify-between overflow-hidden border-[2px] border-[#e0e0e0] border-solid rounded-[10px] text-[#333333] text-[24px]"
       >
         <div class="w-[15%] text-left">{{ item.customer_name }}</div>
         <div class="w-[25%] text-center">{{ item.customer_mobile }}</div>

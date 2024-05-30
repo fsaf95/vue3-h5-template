@@ -33,11 +33,13 @@ const tabbarData = reactive([
 ]);
 </script>
 <style lang="less">
+
 .van-tabbar__placeholder {
   --van-tabbar-height: 120px;
   --van-tabbar-item-font-size: 26px;
   --van-tabbar-item-icon-size: 52px;
   --van-tabbar-item-text-color: #333333;
   --van-tabbar-item-active-color: #e81414;
+  --van-tabbar-z-index:1009;
 }
 </style>

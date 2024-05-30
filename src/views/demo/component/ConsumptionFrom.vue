@@ -3,7 +3,7 @@
     <div
       class="w-full flex items-center justify-between p-[26px] border-b-4 border-slate-300"
     >
-      <div class="text-[24px]">活动类型：微信立减和折扣</div>
+      <div class="text-[26px] text-[#333333] font-bold">活动类型：微信立减和折扣</div>
       <div class="dropdown-menu">
         <button @click="isDropdownVisible = !isDropdownVisible">
           {{ selectedItem }}
@@ -38,67 +38,65 @@
       </div>
       <div class="grid gap-y-[30px] gap-x-[50px] grid-cols-2 my-[40px]">
         <div class="flex items-start text-[26px]">
-          <div class="font-bold">消耗：</div>
+          <p class="font-bold w-[136px]">消 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 耗：</p>
           <div class="font-bold text-[#f3615f] text-right">
             <p class="">
               {{ Number(staticsData.consumption).toFixed(2) }} 元
             </p>
             <p class="text-right">
-              {{ staticsData.verification_amount }} 笔
+              {{ staticsData.consumption_count }} 笔
             </p>
           </div>
         </div>
         <div class="flex items-start text-[26px]">
-          <div class="font-bold">核销：</div>
+          <p class="font-bold w-[136px]">核 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 销：</p>
           <div class="font-bold text-[#f3615f] text-right">
             <p>{{ Number(staticsData.verification_amount).toFixed(2) }} 元</p>
-            <p>{{ staticsData.verification_amount }} 笔</p>
+            <p>{{ staticsData.verification_count }} 笔</p>
           </div>
         </div>
         <div class="flex items-start text-[26px]">
-          <div class="font-bold">累积消耗：</div>
+          <p class="font-bold w-[136px]">累积消耗：</p>
           <div class="font-bold text-[#f3615f] text-right">
-            <p>{{ Number(staticsData.consumption).toFixed(2) }} 元</p>
-            <p>{{ staticsData.consumption }} 笔</p>
+            <p>{{ Number(staticsData.total_consumption).toFixed(2) }} 元</p>
+            <p>{{ staticsData.total_consumption_count }} 笔</p>
           </div>
         </div>
         <div class="flex items-start text-[26px]" v-if="staticsData.toker_count">
-          <div class="font-bold">拓客人数：</div>
+          <p class="font-bold w-[136px]">拓客人数：</p>
           <div class="font-bold text-[#f3615f] text-right">
             <p>{{ Number(staticsData.toker_count) }} 人</p>
           </div>
         </div>
       </div>
       <div class="flex items-center justify-between px-[40px]">
-        <div class="relative w-[250px] h-[250px] z-10 text-center w-full">
+        <div class="relative w-[280px] h-[280px] z-10 text-center w-full">
           <div
             class="absolute top-[50%] left-[50%] z-10 text-center w-full"
             style="transform: translate(-50%, -50%)"
           >
             <p class="font-medium text-[26px] text-[#605d5d]">发放率</p>
             <p class="font-bold text-[#605d5d] text-[46px] text-[#333333]">
-              66.6%
-            </p>
+              {{ staticsData.consumption_rate_str || 0 }}%</p>
             <p class="font-medium text-[#333333] text-[26px]">
               总消耗 / 总预算
             </p>
           </div>
-          <LiquidFill :sliderValue="aaa"></LiquidFill>
+          <LiquidFill :sliderValue="staticsData.consumption_rate"></LiquidFill>
         </div>
-        <div class="relative w-[250px] h-[250px] z-10 text-center w-full">
+        <div class="relative w-[280px] h-[280px] z-10 text-center w-full">
           <div
             class="absolute top-[50%] left-[50%] z-10 w-full"
             style="transform: translate(-50%, -50%)"
           >
             <p class="font-medium text-[26px] text-[#605d5d]">核销率</p>
             <p class="font-bold text-[#605d5d] text-[46px] text-[#333333]">
-              66.6%
-            </p>
+              {{ staticsData.verification_amount_rate_str }}%</p>
             <p class="font-medium text-[#333333] text-[20px]">
               总核销金额 / 总消耗
             </p>
           </div>
-          <LiquidFill :sliderValue="aaa"></LiquidFill>
+          <LiquidFill :sliderValue="staticsData.verification_amount_rate"></LiquidFill>
         </div>
       </div>
     </div>
@@ -115,10 +113,10 @@ const isDropdownVisible = ref(false);
 const selectedItem = ref("立减和折扣"); // 用来存储选中的项目
 const timeFrame = ref("today");
 const staticsData = ref({});
-const aaa:number = ref(0.005)
+const aaa: number = ref(0.005);
 
 const dropdownItems = ref([
-  { id: 1, name: "立减和折扣" },
+  { id: 1, name: "立减和折扣" }
 ]);
 
 const consumeDate = ref([
@@ -133,7 +131,7 @@ onMounted(() => {
 });
 
 // 已消耗金额 水波图的值
-const spikeRate: number = computed(()=>{
+const spikeRate: number = computed(() => {
   // if (totalBudget.value > 0) {
   //   return total_consumption.value / totalBudget.value    // 计算百分比，并乘以100转换为百分比形式
   // } else {
@@ -147,6 +145,7 @@ const handleGetStaticsData = (data) => {
       showFailToast(res.msg);
     } else {
       staticsData.value = res.data;
+      console.log(150, staticsData.value);
     }
   });
 };

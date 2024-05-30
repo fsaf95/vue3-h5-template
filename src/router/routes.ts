@@ -14,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
         name: "Demo",
         component: Demo,
         meta: {
-          title: "主页",
+          title: "广发银行信用卡-新客有礼",
           requireAuth: true
         }
       },

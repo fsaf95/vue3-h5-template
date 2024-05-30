@@ -10,15 +10,14 @@ import { showFailToast } from "vant";
 import { useUser } from "@/store/user";
 const useInfo = useUser()
 
-onMounted(()=>{
+onMounted(async ()=>{
   const token = getToken()
   if (token){
-    getManager().then(res=>{
+    await getManager().then(res=>{
       if (res.code !== 0){
         showFailToast(res.msg)
       }else{
         useInfo.userInfo = res.data
-        console.log(useInfo.userInfo);
       }
     })
   }

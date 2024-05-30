@@ -58,11 +58,11 @@ const handleGetCommonStatics = () => {
   <div class="overflow-hidden box-border bg-[#f2f2f2]">
     <div class="w-full p-7 h-auto bg-white">
       <div class="flex justify-between">
-        <div class="text-2xl text-[#000000] font-bold">
+        <div class="text-[42px] text-[#000000] font-bold">
           <p>广发银行信用卡</p>
           <p>新客有礼</p>
         </div>
-        <div class="relative w-[250px] h-[250px]">
+        <div class="relative w-[280px] h-[280px]">
           <div
             class="absolute top-[50%] left-[50%] w-[90%] text-center text-[#333333] z-10"
             style="transform: translate(-50%, -50%)"
@@ -120,7 +120,7 @@ const handleGetCommonStatics = () => {
       </ul>
     </div>
     <div
-      class="bg-[#f2f2f2] text-sm font-medium text-center py-3 text-[#9aa0a8]"
+      class="bg-[#f2f2f2] text-[26px] font-medium text-center py-3 text-[#9aa0a8]"
     >
       <p>广州蓝鼎网络有限公司</p>
       <p>服务电话：400-8808-248</p>
