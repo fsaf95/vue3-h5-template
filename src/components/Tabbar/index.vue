@@ -20,7 +20,7 @@ const tabbarData = reactive([
     icon: "wap-home-o",
     title: "数据",
     to: {
-      name: "Demo"
+      name: "Home"
     }
   },
   {
@@ -33,7 +33,12 @@ const tabbarData = reactive([
 ]);
 </script>
 <style lang="less">
-
+.van-tabbar{
+  --van-tabbar-background: #ffffff;
+}
+.van-tabbar-item--active{
+  --van-tabbar-item-active-background:#ffffff;
+}
 .van-tabbar__placeholder {
   --van-tabbar-height: 120px;
   --van-tabbar-item-font-size: 26px;

@@ -21,6 +21,7 @@ import * as echarts from "echarts";
 import "echarts-liquidfill";
 import { getStaticsDataByTime } from "@/api";
 import { showFailToast } from "vant";
+import { errorCode } from "@/utils/utils";
 
 const chartInstance: any = ref(null);
 let myChart: echarts.ECharts | null = null;
@@ -155,7 +156,7 @@ const resizeChart = () => {
 const handleGetStaticsDataByTime = async (data) => {
   await getStaticsDataByTime(data).then((res) => {
     if (res.code !== 0) {
-      showFailToast(res.msg);
+      errorCode(res)
     } else {
       dataArr.value = res.data;
       option.value.xAxis.data = dataArr.value.map(item => item.show_date); // 日期

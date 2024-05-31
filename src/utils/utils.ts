@@ -1,5 +1,5 @@
 // 节流
-import { showToast } from "vant";
+import { showFailToast, showToast } from "vant";
 
 //图形验证码验证
 export function isVerificationValue(value) {
@@ -72,5 +72,13 @@ export function mounted() {
     // 向历史记录中插入了当前页
     history.pushState(null, null, document.URL);
     window.addEventListener("popstate", this.goBack, false);
+  }
+}
+
+export function errorCode(res) {
+  console.log(7999,res);
+  if (!(res.code === 400031 || res.code === 400030 || res.code === 4031)) {
+    console.log(8111,res);
+    showFailToast(res.msg);
   }
 }

@@ -135,7 +135,6 @@ onMounted(() => {
 // 使用 watch 监听 sliderValue 的变化
 watch(() => props.sliderValue, (newValue, oldValue) => {
   if (newValue !== oldValue) {
-    console.log(138,newValue);
     option.value.series[0].data[0].value = newValue
     myChart.setOption(option.value);
     window.addEventListener("resize", resizeChart);

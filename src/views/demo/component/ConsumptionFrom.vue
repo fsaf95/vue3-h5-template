@@ -62,7 +62,7 @@
             <p>{{ staticsData.total_consumption_count }} 笔</p>
           </div>
         </div>
-        <div class="flex items-start text-[26px]" v-if="staticsData.toker_count">
+        <div class="flex items-start text-[26px]" v-if="useInfo.userInfo.role == 2">
           <p class="font-bold w-[136px]">拓客人数：</p>
           <div class="font-bold text-[#f3615f] text-right">
             <p>{{ Number(staticsData.toker_count) }} 人</p>
@@ -106,9 +106,13 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
 import LiquidFill from "@/views/demo/component/LiquidFill.vue";
-import { getStaticsData } from "@/api/index.ts";
+import { getManager, getStaticsData } from "@/api/index.ts";
 import { showFailToast } from "vant";
+import { getToken } from "@/utils/token";
+import { useUser } from "@/store/user";
+import { errorCode } from "@/utils/utils";
 
+const useInfo = useUser()
 const isDropdownVisible = ref(false);
 const selectedItem = ref("立减和折扣"); // 用来存储选中的项目
 const timeFrame = ref("today");
@@ -126,7 +130,8 @@ const consumeDate = ref([
   { id: 4, state: false, name: "本年", value: "current_year" }
 ]);
 
-onMounted(() => {
+onMounted( async () => {
+  await handleGetManager()
   handleGetStaticsData({ time_frame: timeFrame.value });
 });
 
@@ -142,10 +147,9 @@ const spikeRate: number = computed(() => {
 const handleGetStaticsData = (data) => {
   getStaticsData(data).then((res) => {
     if (res.code !== 0) {
-      showFailToast(res.msg);
+      errorCode(res)
     } else {
       staticsData.value = res.data;
-      console.log(150, staticsData.value);
     }
   });
 };
@@ -162,6 +166,19 @@ const selectItem = (item: object) => {
   selectedItem.value = item.name; // 更新选中的项目
   isDropdownVisible.value = false; // 关闭下拉菜单
 };
+
+const handleGetManager = async () => {
+  const token = getToken()
+  if (token){
+    await getManager().then(res=>{
+      if (res.code !== 0){
+        errorCode(res)
+      }else{
+        useInfo.userInfo = res.data
+      }
+    })
+  }
+}
 </script>
 
 <style scoped lang="less">

@@ -5,6 +5,7 @@ import ConsumptionFrom from "./component/ConsumptionFrom.vue";
 import BarEcharts from "@/views/demo/component/barEcharts.vue";
 import { getCommonStatics } from "@/api";
 import { showFailToast } from "vant";
+import { errorCode } from "@/utils/utils";
 
 const totalBudget = ref(""); // 总预算
 const totalConsumption = ref(""); // 总消耗
@@ -45,7 +46,7 @@ onMounted(() => {
 const handleGetCommonStatics = () => {
   getCommonStatics().then(res => {
     if (res.code !== 0) {
-      showFailToast(res.msg);
+      errorCode(res)
     } else {
       totalBudget.value = res.data.total_budget;
       totalConsumption.value = res.data.total_consumption;

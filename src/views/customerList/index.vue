@@ -1,7 +1,7 @@
 <script setup lang="ts" name="Tools">
 import CustomerTable from "./component/CustomerTable.vue";
 import { ref, onMounted } from "vue";
-import { isNameValid, isPhoneNumberValid } from "@/utils/utils";
+import { errorCode, isNameValid, isPhoneNumberValid } from "@/utils/utils";
 import { showFailToast, showToast } from "vant";
 import { createCustomer, getManager, searchCustomer } from "@/api";
 import headBg from "@/assets/head-bg.png";
@@ -44,7 +44,7 @@ const activityList = ref("新客有礼券包80元");
 
 onMounted(() => {
   getCustomerList({});
-  handleGetManager()
+  handleGetManager();
 });
 
 // 客户名单列表
@@ -90,7 +90,7 @@ const onSubmit = () => {
   if (!formUser.value.act_id) return showToast("请选择活动");
   createCustomer(formUser.value).then(res => {
     if (res.code !== 0) {
-      showFailToast(res.msg);
+      errorCode(res);
     } else {
       showToast(res.msg);
       overlayShow.value = false;
@@ -99,19 +99,19 @@ const onSubmit = () => {
   });
 };
 
-const handleGetManager = async () =>{
-  const token = getToken()
-  if (token){
-    await getManager().then(res=>{
-      if (res.code !== 0){
-        showFailToast(res.msg)
-      }else{
-        useInfo.userInfo = res.data
+const handleGetManager = async () => {
+  const token = getToken();
+  if (token) {
+    await getManager().then(res => {
+      if (res.code !== 0) {
+        errorCode(res);
+      } else {
+        useInfo.userInfo = res.data;
         formUser.value.userBranch = res.data.branch_name;
       }
-    })
+    });
   }
-}
+};
 </script>
 
 <template>
@@ -250,6 +250,15 @@ const handleGetManager = async () =>{
 </template>
 
 <style lang="less">
+.customer-con {
+  width: 100%;
+  height: auto;
+  background: #ffffff;
+}
+
+.van-field__control {
+  --van-field-input-text-color: #333333;
+}
 
 .input-info {
   width: 350px;
@@ -258,9 +267,31 @@ const handleGetManager = async () =>{
   color: #333333;
   border-radius: 10px;
   border: 2px solid #ccc;
+  background: #ffffff;
   box-sizing: border-box;
 }
 
+.van-popup {
+  --van-popup-background: #FFFFFF;
+}
+
+.van-picker {
+  --van-picker-option-text-color: #333333;
+  --van-picker-background: #FFFFFF;
+  --van-picker-mask-color: linear-gradient(180deg, rgba(150, 144, 144, 0.6), rgba(250, 250, 250, 0.1)), linear-gradient(0deg, rgba(250, 250, 250, 0.6), rgba(250, 250, 250, 0.1))
+}
+
+.van-cell {
+  --van-cell-background: #FFFFFF;
+}
+
+.van-cell-group {
+  --van-border-color:#FFFFFF;
+  --van-cell-group-background: #FFFFFF;
+}
+.van-cell:after{
+  --van-cell-border-color:#FFFFFF;
+}
 .wrapper {
   position: fixed;
   top: 50%;
@@ -294,6 +325,7 @@ const handleGetManager = async () =>{
 }
 
 .select-con {
+  background: #ffffff;
   width: 200px;
   padding: 10px 20px;
   font-size: 26px;

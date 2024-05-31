@@ -69,22 +69,23 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUser } from "@/store/user";
-import { isPhoneNumberValid, isUsercaptchaValue } from "@/utils/utils";
+import { errorCode, isPhoneNumberValid, isUsercaptchaValue } from "@/utils/utils";
 import { showFailToast, showSuccessToast } from "vant";
 import { login, loginSms } from "@/api";
 import { calculateValidTime } from "@/utils/token";
 import * as path from "path";
 import iconLogo from "@/assets/gf-logo.png";
 import iconUser from "@/assets/user.png";
+import routes from "@/router/routes";
 
 const infoUser = useUser();
-const route = useRoute();
-const router = useRouter();
+const _route = useRoute();
+const _router = useRouter();
 
 const return_url = ref("");
 
 onMounted(() => {
-  return_url.value = route.query;
+  return_url.value = _route.query.redirect;
 });
 
 const zhudState = computed(() => {
@@ -106,7 +107,7 @@ const sendCode = async () => {
     await loginSms({ mobile: infoUser.userPhone, login_scene: "manager" })
       .then(res => {
         if (res.code !== 0) {
-          showFailToast(res.msg);
+          errorCode(res);
         } else {
           infoUser.flag = true;
           infoUser.handleCountDownChange();
@@ -138,18 +139,18 @@ const apiGetLogin = () => {
       if (res.code === 0) {
         infoUser.handleTokenChange(res.data.token);
         calculateValidTime(res.data.token.expires_in); // 计算token的有效时间
-        if (return_url.value.redirect) {
-          router.push(return_url.value.redirect);
+        if (return_url.value) {
+          _router.push(return_url.value);
         } else {
-          router.push({ path: "/demo" });
+          _router.push({ path: "/home" });
         }
       } else {
-        showFailToast(res.msg);
+        errorCode(res);
       }
     })
     .catch(error => {
       infoUser.loading = false;
-      showFailToast("服务器开小差了，请刷新后重试");
+      showFailToast(error.msg);
     });
 };
 </script>

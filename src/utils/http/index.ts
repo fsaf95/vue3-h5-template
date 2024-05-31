@@ -14,10 +14,11 @@ import {
   getToken,
   getTokenType,
   handleLocalStorage,
-  isRefreshTokenExpired
+  isRefreshTokenExpired, removeToken
 } from "@/utils/token";
 import { smsRefresh } from "@/api";
-import router from '@/router'; // 根据你的项目结构来导入 router
+import router from "@/router";
+import { errorCode } from "@/utils/utils"; // 根据你的项目结构来导入 router
 
 let isRefreshing = false; // 是否正在刷新的标记
 
@@ -48,18 +49,16 @@ class Http {
           if (isRefreshTokenExpired()) {
             if (!isRefreshing) {
               isRefreshing = true;
-              smsRefresh({ token_type: getTokenType(), refresh_token: getRefreshToken() })
-                .then((res) => {
-                  if (res.code !== 0) {
-
-                  } else {
-                    handleLocalStorage(res.data); // 存储新的token和刷新token
-                    calculateValidTime(res.data.expires_in); // 计算token的有效时间
-                    isRefreshing = false;
-                  }
-                }).catch(error => {
-
-              });
+              // smsRefresh({ token_type: getTokenType(), refresh_token: getRefreshToken() })
+              //   .then((res) => {
+              //     if (res.code === 0) {
+              //       handleLocalStorage(res.data); // 存储新的token和刷新token
+              //       calculateValidTime(res.data.expires_in); // 计算token的有效时间
+              //       isRefreshing = false;
+              //     }
+              //   }).catch(error => {
+              //
+              // });
             }
           } else {
             // 有效时间不小于一分钟
@@ -93,10 +92,9 @@ class Http {
           return response.data;
         } else {
           // 处理请求错误
-          showFailToast(msg);
-          const redirect = window.location.pathname + window.location.search;
+          errorCode(response.data);
           if (code === 400031 || code === 400030 || code === 4031) {
-            router.push({path: "/login",query:{redirect}})
+            router.push({ path: "/login", query: { require_login: 1 } });
           }
           return Promise.reject(response.data);
         }

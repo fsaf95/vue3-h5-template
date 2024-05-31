@@ -7,11 +7,20 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "root",
     component: Layout,
-    redirect: { name: "Demo" },
+    redirect: { name: "Login" },
     children: [
       {
         path: "/demo",
         name: "Demo",
+        redirect: {name: 'Login'},
+        meta: {
+          title: "广发银行信用卡-新客有礼",
+          requireAuth: false
+        }
+      },
+      {
+        path: "/home",
+        name: "Home",
         component: Demo,
         meta: {
           title: "广发银行信用卡-新客有礼",

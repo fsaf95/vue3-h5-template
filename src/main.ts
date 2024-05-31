@@ -8,6 +8,11 @@ import "./styles/index.less";
 import "./styles/tailwind.css";
 // svg icon
 import "virtual:svg-icons-register";
+// 引入 Vconsole
+// import Vconsole from 'vconsole'
+
+// 所有环境均使用
+// new Vconsole()
 
 import App from "./App.vue";
 import router from "./router";
