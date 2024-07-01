@@ -35,6 +35,7 @@ const columns = ref([
   { value: "0", text: "未领取" },
   { value: "1", text: "发放中" },
   { value: "2", text: "领取成功" },
+  { value: "3", text: "已核销" },
   { value: "5", text: "领取失败" }
 ]);
 const fieldValue = ref("");
