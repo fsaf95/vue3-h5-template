@@ -27,7 +27,7 @@ export function isUsercaptchaValue(value) {
   }
 }
 
-// 手机号码验证
+// 名字验证
 export function isNameValid(name) {
   const regExp = /^[\u4e00-\u9fa5·\s]{2,20}$/;
   if (!name) {
