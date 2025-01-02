@@ -41,7 +41,7 @@ const columns = ref([
 const fieldValue = ref("");
 const showPicker = ref(false);
 
-const activityList = ref("新客有礼券包80元");
+const activityList = ref("新客有礼券包75元");
 
 onMounted(() => {
   getCustomerList({});
